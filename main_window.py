@@ -12,8 +12,10 @@ class MainWindow(QMainWindow):
 
         # Crear la barra de menú utilizando la clase CreateMenuBar
         menu_creator = CreateMenuBar(self)
-        menu_creator.file_menu()  # Agrega la opcion "Archivo"
-        menu_creator.exit_menu()  # Agrega la opcion "Salir"
+        menu_creator.file_menu()  # Agrega la opción "Archivo"
+        menu_creator.analysis_menu() # Agrega la opción "Análisis"
+        menu_creator.tokens_menu() # Agrega la opción "Tokens"
+        menu_creator.exit_menu()  # Agrega la opción "Salir"
 
         # Configurar la barra de menú
         self.setMenuBar(menu_creator.get_menu_bar())
