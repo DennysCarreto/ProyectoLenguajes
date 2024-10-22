@@ -6,6 +6,7 @@ from PyQt6.QtCore import Qt
 from menu import CreateMenuBar
 from lexical_analyzer import LexicalAnalyzer
 from syntax_analyzer import Parser
+import re
 
 class SyntaxHighlighter(QSyntaxHighlighter):
     def __init__(self, parent):
