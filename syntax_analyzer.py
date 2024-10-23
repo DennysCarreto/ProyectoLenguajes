@@ -1,17 +1,19 @@
 from enum import Enum
 
+
 class SyntaxError(Exception):
     def __init__(self, message, line=None):
         self.message = message
         self.line = line
         super().__init__(self.message)
 
+
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
         self.current = 0
         self.errors = []
-        
+
     def match(self, expected_type):
         if self.current < len(self.tokens):
             current_token = self.tokens[self.current]
@@ -54,52 +56,52 @@ class Parser:
             self.current += 1
             self.parse_expression()
 
-        if not self.match('SIGNOS') or self.tokens[self.current-1][1] != ';':
+        if not self.match('SIGNOS') or self.tokens[self.current - 1][1] != ';':
             raise SyntaxError("Se esperaba ';'")
 
     def parse_function_declaration(self):
         """Análisis de declaración de funciones"""
         # funcion identificador(param1, param2) { ... }
         self.match('PALABRA_RESERVADA')  # 'funcion'
-        
+
         if not self.match('IDENTIFICADORES'):
             raise SyntaxError("Se esperaba el nombre de la función")
 
-        if not self.match('OPERADOR') or self.tokens[self.current-1][1] != '(':
+        if not self.match('OPERADOR') or self.tokens[self.current - 1][1] != '(':
             raise SyntaxError("Se esperaba '('")
 
         # Parsear parámetros
         params_count = 0
         while self.peek() and self.peek()[1] != ')':
             if params_count > 0:
-                if not self.match('SIGNOS') or self.tokens[self.current-1][1] != ',':
+                if not self.match('SIGNOS') or self.tokens[self.current - 1][1] != ',':
                     raise SyntaxError("Se esperaba ','")
-            
+
             if not self.match('PALABRA_RESERVADA'):
                 raise SyntaxError("Se esperaba tipo de parámetro")
-            
+
             if not self.match('IDENTIFICADORES'):
                 raise SyntaxError("Se esperaba nombre de parámetro")
-            
+
             params_count += 1
 
         if params_count < 2:
             raise SyntaxError("La función debe tener al menos 2 parámetros")
 
-        if not self.match('OPERADOR') or self.tokens[self.current-1][1] != ')':
+        if not self.match('OPERADOR') or self.tokens[self.current - 1][1] != ')':
             raise SyntaxError("Se esperaba ')'")
 
         self.parse_block()
 
     def parse_block(self):
         """Análisis de bloques de código"""
-        if not self.match('SIGNOS') or self.tokens[self.current-1][1] != '{':
+        if not self.match('SIGNOS') or self.tokens[self.current - 1][1] != '{':
             raise SyntaxError("Se esperaba '{'")
 
         while self.peek() and self.peek()[1] != '}':
             self.parse_statement()
 
-        if not self.match('SIGNOS') or self.tokens[self.current-1][1] != '}':
+        if not self.match('SIGNOS') or self.tokens[self.current - 1][1] != '}':
             raise SyntaxError("Se esperaba '}'")
 
     def parse_statement(self):
@@ -116,19 +118,19 @@ class Parser:
             self.parse_do_while_statement()
         else:
             self.parse_expression()
-            if not self.match('SIGNOS') or self.tokens[self.current-1][1] != ';':
+            if not self.match('SIGNOS') or self.tokens[self.current - 1][1] != ';':
                 raise SyntaxError("Se esperaba ';'")
 
     def parse_if_statement(self):
         """Análisis de estructura if"""
         self.match('PALABRA_RESERVADA')  # 'si'
-        
-        if not self.match('OPERADOR') or self.tokens[self.current-1][1] != '(':
+
+        if not self.match('OPERADOR') or self.tokens[self.current - 1][1] != '(':
             raise SyntaxError("Se esperaba '(' después de 'si'")
 
         self.parse_expression()
 
-        if not self.match('OPERADOR') or self.tokens[self.current-1][1] != ')':
+        if not self.match('OPERADOR') or self.tokens[self.current - 1][1] != ')':
             raise SyntaxError("Se esperaba ')'")
 
         self.parse_block()
@@ -140,13 +142,13 @@ class Parser:
     def parse_while_statement(self):
         """Análisis de estructura while"""
         self.match('PALABRA_RESERVADA')  # 'mientras'
-        
-        if not self.match('OPERADOR') or self.tokens[self.current-1][1] != '(':
+
+        if not self.match('OPERADOR') or self.tokens[self.current - 1][1] != '(':
             raise SyntaxError("Se esperaba '(' después de 'mientras'")
 
         self.parse_expression()
 
-        if not self.match('OPERADOR') or self.tokens[self.current-1][1] != ')':
+        if not self.match('OPERADOR') or self.tokens[self.current - 1][1] != ')':
             raise SyntaxError("Se esperaba ')'")
 
         self.parse_block()
@@ -154,7 +156,7 @@ class Parser:
     def parse_do_while_statement(self):
         """Análisis de estructura do-while"""
         self.match('PALABRA_RESERVADA')  # 'hacer'
-        
+
         self.parse_block()
 
         if not self.peek() or self.peek()[1] != 'mientras':
@@ -162,15 +164,15 @@ class Parser:
 
         self.match('PALABRA_RESERVADA')
 
-        if not self.match('OPERADOR') or self.tokens[self.current-1][1] != '(':
+        if not self.match('OPERADOR') or self.tokens[self.current - 1][1] != '(':
             raise SyntaxError("Se esperaba '('")
 
         self.parse_expression()
 
-        if not self.match('OPERADOR') or self.tokens[self.current-1][1] != ')':
+        if not self.match('OPERADOR') or self.tokens[self.current - 1][1] != ')':
             raise SyntaxError("Se esperaba ')'")
 
-        if not self.match('SIGNOS') or self.tokens[self.current-1][1] != ';':
+        if not self.match('SIGNOS') or self.tokens[self.current - 1][1] != ';':
             raise SyntaxError("Se esperaba ';'")
 
     def parse_expression(self):
@@ -189,9 +191,9 @@ class Parser:
     def synchronize(self):
         """Recuperación de errores"""
         while self.peek():
-            if self.tokens[self.current-1][1] == ';':
+            if self.tokens[self.current - 1][1] == ';':
                 return
-            
+
             if self.peek()[1] in ['si', 'mientras', 'hacer', 'funcion']:
                 return
 

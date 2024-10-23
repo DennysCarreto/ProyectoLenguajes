@@ -1,5 +1,6 @@
 import re
 
+
 class LexicalAnalyzer:
     def __init__(self):
         self.tokens = {
@@ -11,12 +12,12 @@ class LexicalAnalyzer:
         }
         self.token_regex = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in self.tokens.items())
         self.token_pattern = re.compile(self.token_regex)
-        
+
     def analyze(self, text):
         lines = text.split('\n')
         all_tokens = []
         errors = []
-        
+
         for line_num, line in enumerate(lines, 1):
             line_tokens = []
             position = 0
@@ -31,9 +32,9 @@ class LexicalAnalyzer:
                     errors.append(f"Error léxico en línea {line_num}, posición {position + 1}: '{line[position]}'")
                     position += 1
             all_tokens.extend(line_tokens)
-        
+
         return all_tokens, errors
-    
+
     def count_tokens(self, tokens):
         token_counts = {}
         for token_type, token_value in tokens:
