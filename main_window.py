@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         
     def init_ui(self):
         self.setWindowTitle("Analizador Léxico y Sintáctico")
-        self.setGeometry(100, 100, 1200, 800)
+        self.setGeometry(100, 100, 800, 600)
         
         # Widget central y layout principal
         self.central_widget = QWidget()
