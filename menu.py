@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import QMenuBar, QMenu
 from PyQt6.QtGui import QAction
 
-
 class CreateMenuBar:
     def __init__(self, window):
         self.window = window
